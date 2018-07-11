@@ -1,0 +1,41 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.1",
+    "signature": "77f824f32b3bada21a63d678e3e676cd179d64c6"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.1": {
+      "stanger-things/1.0.0": {
+        "dependencies": {
+          "Inquirer.cs": "3.0.1"
+        },
+        "runtime": {
+          "stanger-things.dll": {}
+        }
+      },
+      "Inquirer.cs/3.0.1": {
+        "runtime": {
+          "lib/InquirerCS.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "stanger-things/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Inquirer.cs/3.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-NNji7UrPIkjVYFE1a8U9iSRUkVYIoC1G03Q6+i3uJ7ZDIvIfS4EpAZ9eF4kj6QiRKbDrhPEQ/BDqURhuaOKbFA==",
+      "path": "inquirer.cs/3.0.1",
+      "hashPath": "inquirer.cs.3.0.1.nupkg.sha512"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+C:\Users\johnn\Desktop\stanger-things\bin\Debug\netcoreapp2.0\stanger-things.deps.json
+C:\Users\johnn\Desktop\stanger-things\bin\Debug\netcoreapp2.0\stanger-things.runtimeconfig.json
+C:\Users\johnn\Desktop\stanger-things\bin\Debug\netcoreapp2.0\stanger-things.runtimeconfig.dev.json
+C:\Users\johnn\Desktop\stanger-things\bin\Debug\netcoreapp2.0\stanger-things.dll
+C:\Users\johnn\Desktop\stanger-things\bin\Debug\netcoreapp2.0\stanger-things.pdb
+C:\Users\johnn\Desktop\stanger-things\obj\Debug\netcoreapp2.0\stanger-things.csprojAssemblyReference.cache
+C:\Users\johnn\Desktop\stanger-things\obj\Debug\netcoreapp2.0\stanger-things.csproj.CoreCompileInputs.cache
+C:\Users\johnn\Desktop\stanger-things\obj\Debug\netcoreapp2.0\stanger-things.AssemblyInfoInputs.cache
+C:\Users\johnn\Desktop\stanger-things\obj\Debug\netcoreapp2.0\stanger-things.AssemblyInfo.cs
+C:\Users\johnn\Desktop\stanger-things\obj\Debug\netcoreapp2.0\stanger-things.dll
+C:\Users\johnn\Desktop\stanger-things\obj\Debug\netcoreapp2.0\stanger-things.pdb

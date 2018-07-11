@@ -1,0 +1,507 @@
+using System;
+using System.Collections.Generic;
+
+
+namespace stanger_things
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            bool gameOver = false;
+            int round = 0;
+            bool upsideDown = false;
+            Location currentLocation = new Location(null, null);
+            List<Location> allLocations = new List<Location>();
+            List<Item> allItems = new List<Item>();
+            List<String> userOptions = new List<String>();
+            userOptions.Add("View Connected Locations");
+            userOptions.Add("Move to Anoter Location");
+            userOptions.Add("View Location Items");
+            userOptions.Add("Pick Up Location Item");
+            userOptions.Add("View My Items");
+            userOptions.Add("Drop Item");
+            userOptions.Add("Move to the Upside Down");
+
+
+            Console.WriteLine("--------Welcome to Harkins, Indiana you little adventurer!--------");
+            Console.WriteLine("Before you stary your journey, tell us your name!");
+            string name = Console.ReadLine().Trim();
+            //creating the player and enemy
+            Player player = new Player(name, 100);
+            Player demigorgon = new Player("DEMIGORGON", 100);
+
+            //initializing the Lab
+            Item houseKey = new Item("House Key");
+            Item glasses = new Item("Barb's Glasses");
+            Location laboratory = new Location("The Laboratory", null);
+            laboratory.locationItems.Add(houseKey);
+            laboratory.upsideItems.Add(glasses);
+            allLocations.Add(laboratory);
+            allItems.Add(houseKey);
+            allItems.Add(glasses);
+
+
+            //intitializing Mike's house
+            Item baseballBat = new Item("Baseball Bat");
+            Item christmasLights = new Item("Christmas Lights");
+            Location mikesHouse = new Location("Mikes House", houseKey);
+            mikesHouse.locationItems.Add(baseballBat);
+            mikesHouse.upsideItems.Add(christmasLights);
+            allLocations.Add(mikesHouse);
+            allItems.Add(baseballBat);
+            allItems.Add(christmasLights);
+
+            //initializing the High School
+            Item demigorgonStuff = new Item("Demigorgon Stuff");
+            Location highSchool = new Location("Hawkins High School", baseballBat);
+            highSchool.upsideItems.Add(demigorgonStuff);
+            allLocations.Add(highSchool);
+            allItems.Add(demigorgonStuff);
+
+            //initializing the Demigorgon Lair
+            Item demigorgonHeart = new Item("Demigorgon Heart");
+            Location demigorgonLair = new Location("Demigorgon Lair", demigorgonStuff);
+            demigorgonLair.locationItems.Add(demigorgonHeart);
+            allLocations.Add(demigorgonLair);
+            allItems.Add(demigorgonHeart);
+
+            //connecting the locations
+            laboratory.connectedLocations.Add(mikesHouse);
+            laboratory.upsideLocations.Add(highSchool);
+            laboratory.upsideLocations.Add(demigorgonLair);
+
+            mikesHouse.connectedLocations.Add(laboratory);
+            mikesHouse.connectedLocations.Add(highSchool);
+
+            highSchool.connectedLocations.Add(mikesHouse);
+            highSchool.upsideLocations.Add(laboratory);
+
+            demigorgonLair.upsideLocations.Add(laboratory);
+
+
+
+
+            Console.WriteLine($"Your adventure begins! Good Luck,{player.Name}!");
+            currentLocation = laboratory;
+            while (!gameOver)
+            {
+                if (player.Health <= 0)
+                {
+                    gameOver = true;
+                    Console.WriteLine("YOU DIED. GAME OVER!");
+                }
+
+                round++;
+
+                int optionsCount = 7;
+                int selected = 0;
+                bool done = false;
+
+                while (!done)
+                {
+                    for (int i = 0; i < optionsCount; i++)
+                    {
+                        if (selected == i)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.Write("> ");
+                        }
+                        else
+                        {
+                            Console.Write("  ");
+                        }
+
+                        Console.WriteLine($"{userOptions[i]}");
+
+                        Console.ResetColor();
+                    }
+
+                    switch (Console.ReadKey(true).Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            selected = Math.Max(0, selected - 1);
+                            break;
+                        case ConsoleKey.DownArrow:
+                            selected = Math.Min(optionsCount - 1, selected + 1);
+                            break;
+                        case ConsoleKey.Enter:
+                            done = true;
+                            break;
+                    }
+
+                    if (!done)
+                        Console.CursorTop = Console.CursorTop - optionsCount;
+                }
+                selected = selected+1;
+                string switchString = selected.ToString();
+                Console.WriteLine($"Selected {switchString}.");
+                Console.WriteLine($"--------Round {round}--------");
+                Console.WriteLine($"You are currently in {currentLocation.Name} with {player.Health} health");
+                Console.WriteLine($"What would you like to?");
+                Console.WriteLine("1. View Connected Locations\n2. Move to Anoter Location\n3. View Location Items\n4. Pick Up Location Item\n5. View My Items \n6. Drop Item\n7. Move to the Upside Down");
+                string input = (Console.ReadLine()).Trim();
+
+                switch (input)
+                {
+
+                    case "1":
+                        if (!upsideDown)
+                        {
+                            Console.WriteLine("Connected Locations: ");
+                            foreach (Location i in currentLocation.connectedLocations)
+                            {
+
+                                Console.WriteLine(i.Name);
+                            }
+                            Console.WriteLine("\n");
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("Connected Locations: ");
+                            foreach (Location i in currentLocation.upsideLocations)
+                            {
+                                Console.WriteLine(i.Name);
+                            }
+                            player.Health = player.Health - 5;
+                            Console.WriteLine("You lost 5 health for being in the UpsideDown");
+
+                            Console.WriteLine("\n");
+
+                        }
+                        break;
+
+
+                    case "2":
+
+                        if (!upsideDown)
+                        {
+
+                            Console.WriteLine("Enter the name of the location you want to travel to.");
+                            string nextLocation = Console.ReadLine().Trim();
+                            foreach (Location i in currentLocation.connectedLocations)
+                            {
+                                if (nextLocation == i.Name)
+                                {
+                                    foreach (Item j in player.PlayerItems)
+                                    {
+                                        if (j == i.UnlockItem)
+                                        {
+
+                                            currentLocation = i;
+                                            Console.WriteLine($"You have unlocked {currentLocation.Name} with your {currentLocation.UnlockItem.Name} and have traveled there");
+                                        }
+                                        if (i.UnlockItem == null)
+                                        {
+                                            currentLocation = i;
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine($"You do not have the {i.UnlockItem} to enter {i.Name}");
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Location not found.");
+                                }
+                            }
+
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("Enter the name of the location you want to travel to.");
+                            string nextLocation = Console.ReadLine().Trim();
+                            foreach (Location i in currentLocation.upsideLocations)
+                            {
+                                if (nextLocation == i.Name)
+                                {
+                                    Console.WriteLine("location found");
+
+                                    foreach (Item j in player.PlayerItems)
+                                    {
+                                        if (j == i.UnlockItem)
+                                        {
+                                            currentLocation = i;
+                                            Console.WriteLine($"You have unlocked {currentLocation.Name} with your {currentLocation.UnlockItem} and have traveled there");
+                                        }
+                                        if (i.UnlockItem == null)
+                                        {
+                                            currentLocation = i;
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine($"You do not have the {i.UnlockItem} to enter {i.Name}");
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Location not found.");
+                                }
+                            }
+                            player.Health = player.Health - 5;
+                            Console.WriteLine("You lost 5 health for being in the UpsideDown");
+
+                        }
+
+
+                        break;
+
+                    case "3":
+                        if (!upsideDown)
+                        {
+
+                            if (currentLocation.locationItems.Count > 0)
+                            {
+                                Console.WriteLine($"--------Items in {currentLocation.Name}-------- ");
+
+                                foreach (Item i in currentLocation.locationItems)
+                                {
+                                    Console.WriteLine(i.Name);
+                                }
+                                Console.WriteLine("\n");
+
+                            }
+                            else
+                            {
+                                Console.WriteLine("You do not find any items");
+                            }
+
+                        }
+                        else
+
+                        {
+
+                            if (currentLocation.upsideItems.Count > 0)
+                            {
+
+                                Console.WriteLine($"--------Items in {currentLocation.Name}-------- ");
+
+                                foreach (Item i in currentLocation.upsideItems)
+                                {
+                                    Console.WriteLine(i.Name);
+                                }
+                                player.Health = player.Health - 5;
+                                Console.WriteLine("You lost 5 health for being in the UpsideDown");
+
+                                Console.WriteLine("\n");
+
+                            }
+                            else
+                            {
+                                Console.WriteLine("You do not find any items");
+                            }
+
+                        }
+
+                        break;
+
+                    case "4":
+
+                        if (player.PlayerItems.Count < 2)
+                        {
+
+                            if (!upsideDown)
+                            {
+                                Console.WriteLine("Enter the name of the item you wish to pickup:");
+                                string itemToPickup = Console.ReadLine().Trim();
+                                bool itemFound = false;
+
+                                foreach (Item i in currentLocation.locationItems)
+                                {
+                                    if (i.Name == itemToPickup)
+                                    {
+                                        player.PlayerItems.Add(i);
+                                        itemFound = true;
+                                        Console.WriteLine($"You have picked up {i.Name}");
+
+                                        if (i.Name == "Demigorgon Heart")
+                                        {
+                                            Console.WriteLine($"VICTORY! YOU BRUTALLY MURDERED THE DEMIGORGON!");
+                                            gameOver = true;
+                                        }
+                                    }
+
+                                }
+                                if (!itemFound)
+                                {
+                                    Console.WriteLine("Item not found");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Enter the name of the item you wish to pickup:");
+                                string itemToPickup = Console.ReadLine().Trim();
+                                bool itemFound = false;
+
+                                foreach (Item i in currentLocation.upsideItems)
+                                {
+                                    if (i.Name == itemToPickup)
+                                    {
+                                        player.PlayerItems.Add(i);
+                                        itemFound = true;
+                                        Console.WriteLine($"You have picked up {i.Name}");
+                                    }
+
+                                }
+                                if (!itemFound)
+                                {
+                                    Console.WriteLine("Item not found");
+                                }
+                                player.Health = player.Health - 5;
+                                Console.WriteLine("You lost 5 health for being in the UpsideDown");
+
+                            }
+
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("You can only hold 2 items at once. You must drop one if you want to pick up another.");
+                        }
+
+                        break;
+
+                    case "5":
+
+
+                        if (!upsideDown)
+                        {
+                            if (player.PlayerItems.Count > 0)
+                            {
+                                Console.WriteLine("-------You have--------");
+                                foreach (Item i in player.PlayerItems)
+                                {
+                                    Console.WriteLine(i.Name);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("You have no items");
+
+                            }
+                        }
+                        else
+                        {
+                            if (player.PlayerItems.Count > 0)
+                            {
+                                foreach (Item i in player.PlayerItems)
+                                {
+                                    Console.WriteLine(i.Name);
+                                }
+                            }
+                            player.Health = player.Health - 5;
+                            Console.WriteLine("You lost 5 health for being in the UpsideDown");
+
+
+                        }
+                        break;
+                    case "6":
+
+                        if (!upsideDown)
+                        {
+                            if (player.PlayerItems.Count > 0)
+                            {
+                                Console.WriteLine("Enter the name of the item you want to drop");
+                                string itemToDrop = Console.ReadLine().Trim();
+                                bool dropItemfound = false;
+
+                                Item drop = new Item();
+                                foreach (Item i in player.PlayerItems)
+                                {
+                                    if (i.Name == itemToDrop)
+                                    {
+                                        dropItemfound = true;
+                                        currentLocation.locationItems.Add(i);
+                                        drop = i;
+                                        Console.WriteLine($"You have removed {i.Name} at {currentLocation.Name}");
+
+                                    }
+                                }
+                                if (!dropItemfound)
+                                {
+                                    Console.WriteLine("Item not found");
+                                }
+                                else
+                                {
+                                    player.PlayerItems.Remove(drop);
+
+                                }
+
+
+                            }
+                            else
+                            {
+                                Console.WriteLine("You have no items to drop");
+                            }
+
+
+                        }
+                        else
+                        {
+                            if (player.PlayerItems.Count > 0)
+                            {
+                                Console.WriteLine("Enter the name of the item you want to drop");
+                                string itemToDrop = Console.ReadLine().Trim();
+                                bool dropItemfound = false;
+                                Item drop = new Item();
+
+                                foreach (Item i in player.PlayerItems)
+                                {
+                                    if (i.Name == itemToDrop)
+                                    {
+                                        dropItemfound = true;
+                                        currentLocation.upsideItems.Add(i);
+                                        drop = i;
+                                        Console.WriteLine($"You have removed {i.Name} at {currentLocation.Name}");
+
+                                    }
+                                }
+                                if (!dropItemfound)
+                                {
+                                    Console.WriteLine("Item not found");
+                                }
+                                else
+                                {
+                                    player.PlayerItems.Remove(drop);
+
+                                }
+
+
+                            }
+                            else
+                            {
+                                Console.WriteLine("You have no items to drop");
+                            }
+                            player.Health = player.Health - 5;
+                            Console.WriteLine("You lost 5 health for being in the UpsideDown");
+                        }
+                        break;
+
+                    case "7":
+
+                        if (upsideDown)
+                        {
+                            upsideDown = false;
+                            Console.WriteLine("You have left the UpsideDown");
+                        }
+                        else
+                        {
+                            upsideDown = true;
+                            Console.WriteLine("You have entered the UpsideDown");
+                            Console.WriteLine("You now take 5 damage every turn");
+                        }
+
+
+                        break;
+
+
+                }
+
+            }
+        }
+    }
+}
