@@ -3,8 +3,7 @@
 A C# console game based in the Stranger Things universe. Player must choose a character and set out on a journey across multiple locations in Hawkings, Indiana to defeat the Demigorgon.
 
 
-![](https://imgur.com/Wt9LbEz)
-## Built With
+![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")## Built With
 
 * [C#](https://docs.microsoft.com/en-us/dotnet/csharp/) - The language used
 
